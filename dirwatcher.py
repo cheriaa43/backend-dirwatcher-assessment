@@ -114,21 +114,21 @@ def main():
         '   Started on {1}\n'
         '-------------------------------------------------\n'
         .format(__file__, app_start_time.isoformat())
-
+    )
     parser = create_parser()
     args = parser.parse_args()
 
     # Hook these two signals from the OS ..
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    # Signal_handler will get called if OS sends either of these to my process.
+    # Now my signal_handler will get called if OS sends either of these to my process.
 
     while not exit_flag:
         try:
-            # call directory watching function..
+            # call my directory watching function..
             watch_dir(args)
         except OSError as e:
-            # UNHANDLED exception
+            # This is an UNHANDLED exception
             # Log an ERROR level message here
             if e.errno == errno.ENOENT:
                 logger.error(f"{args.path} directory not found")
@@ -137,12 +137,13 @@ def main():
                 logger.error(e)
         except Exception as e:
             logger.error(f"UNHANDLED EXCEPTION:{e}")
-            
-            # Sleep inside while loop so I don't peg the cpu usage at 100%
+
+            # put a sleep inside my while loop so I don't peg the cpu usage at 100%
 
         time.sleep(int(float(args.interval)))
 
-    # Exit and log a message that we are shutting down
+    # final exit point happens here
+    # Log a message that we are shutting down
     # Include the overall uptime since program start.
     uptime = dt.now() - app_start_time
     logger.info(
